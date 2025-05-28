@@ -1,36 +1,41 @@
+// game.js
 import '../css/style.css'
-import { Actor, Engine, Vector, DisplayMode, randomInRange } from "excalibur"
+import { Engine, DisplayMode } from "excalibur"
 import { Resources, ResourceLoader } from './resources.js'
+import { Player } from './player.js'
+import { Bg } from './bg.js'
+import { CameraManager } from './camera-manager.js'
 
 export class Game extends Engine {
-
     constructor() {
-        super({ 
+        super({
             width: 800,
             height: 450,
             maxFps: 60,
             displayMode: DisplayMode.FitScreen
-         })
+        })
         this.start(ResourceLoader).then(() => this.startGame())
+        this.showDebug(true)
     }
 
     startGame() {
-        console.log("start de game!")
-        const bg = new Actor()
-        bg.graphics.use(Resources.BG.toSprite())
-        this.add(bg)
-        for (let i = 0; i < 30; i++) {
-            const fish = new Actor()
-            fish.graphics.use(Resources.Fish.toSprite())
-            fish.pos = new Vector(randomInRange(0, 500), randomInRange(0, 300))
-            fish.vel = new Vector(randomInRange(-200, 0), randomInRange(0, 20))
-            fish.events.on("exitviewport", (e) => this.fishLeft(e))
-            this.add(fish)
-        }
-    }
+        console.log("Game started!")
 
-    fishLeft(e) {
-        e.target.pos = new Vector(1350, 300)
+        const background = new Bg()
+        background.graphics.use(Resources.BG.toSprite())
+        this.add(background)
+
+        const player = new Player(400, 225)
+        this.add(player)
+        this.cameraManager = new CameraManager(this, player)
+        this.cameraManager.initialize()
+
+        // Stel camera-bounds in zodat de camera niet buiten de BG kan
+        const left = 0 + this.drawWidth / 2;
+        const top = 0 + this.drawHeight / 2;
+        const right = 3000 - this.drawWidth / 2;
+        const bottom = 2000 - this.drawHeight / 2;
+        this.camera.bounds.setTo(left, top, right, bottom);
     }
 }
 
