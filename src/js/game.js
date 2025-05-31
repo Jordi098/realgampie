@@ -16,10 +16,10 @@ export class Game extends Engine {
             maxFps: 60,
             displayMode: DisplayMode.FitScreen
         })
-        
+
         this.start(ResourceLoader).then(() => this.startGame())
         this.showDebug(true)
-         this.mainScene = new Scene();
+        this.mainScene = new Scene();
         this.add('main', this.mainScene)
 
         this.zombieSpawnTimer = 0
@@ -33,14 +33,13 @@ export class Game extends Engine {
         this.zombieSpawnInterval = 120;
         this.powerUpSpawnTimer = 0;
         this.powerUpSpawnInterval = 600;
-        
-        // Herstart het spel
+        this.mainScene.clear();
         this.startGame();
     }
 
     startGame() {
-    this.goToScene('main');
-        
+        this.goToScene('main');
+
         const background = new Bg();
         this.mainScene.add(background);
 
@@ -50,14 +49,14 @@ export class Game extends Engine {
 
         this.cameraManager = new CameraManager(this, this.player, this.mainScene);
         this.cameraManager.initialize();
-}
+    }
     onPostUpdate(engine, delta) {
         super.onPostUpdate(engine, delta)
 
         this.zombieSpawnTimer++
         if (this.zombieSpawnTimer >= this.zombieSpawnInterval) {
             this.zombieSpawnTimer = 0
-            this.spawnZombie()
+            this.#spawnZombie()
 
             if (this.zombieSpawnInterval > 30) {
                 this.zombieSpawnInterval -= 1
@@ -67,41 +66,41 @@ export class Game extends Engine {
         this.powerUpSpawnTimer++
         if (this.powerUpSpawnTimer >= this.powerUpSpawnInterval) {
             this.powerUpSpawnTimer = 0
-            this.spawnPowerUp()
+            this.#spawnPowerUp()
         }
     }
 
-    spawnZombie() {
-    const zombieType = Math.random() > 0.7 ? "fast" : "slow";
-    const zombie = new Zombie(zombieType);
-    
-    const spawnSide = Math.floor(Math.random() * 4);
-    let spawnX, spawnY;
-    
-    switch(spawnSide) {
-        case 0: 
-            spawnX = -50;
-            spawnY = randomInRange(50, 950);
-            break;
-        case 1: 
-            spawnX = 1550;
-            spawnY = randomInRange(50, 950);
-            break;
-        case 2:
-            spawnX = randomInRange(50, 1450);
-            spawnY = -50;
-            break;
-        case 3: 
-            spawnX = randomInRange(50, 1450);
-            spawnY = 1050;
-            break;
-    }
-    
-    zombie.pos = new Vector(spawnX, spawnY);
-    this.mainScene.add(zombie);
-}
+    #spawnZombie() {
+        const zombieType = Math.random() > 0.7 ? "fast" : "slow";
+        const zombie = new Zombie(zombieType);
 
-    spawnPowerUp() {
+        const spawnSide = Math.floor(Math.random() * 4);
+        let spawnX, spawnY;
+
+        switch (spawnSide) {
+            case 0:
+                spawnX = -50;
+                spawnY = randomInRange(50, 950);
+                break;
+            case 1:
+                spawnX = 1550;
+                spawnY = randomInRange(50, 950);
+                break;
+            case 2:
+                spawnX = randomInRange(50, 1450);
+                spawnY = -50;
+                break;
+            case 3:
+                spawnX = randomInRange(50, 1450);
+                spawnY = 1050;
+                break;
+        }
+
+        zombie.pos = new Vector(spawnX, spawnY);
+        this.mainScene.add(zombie);
+    }
+
+    #spawnPowerUp() {
         const type = Math.random() > 0.5 ? "health" : "ammo"
         const powerUp = new PowerUp(type)
         this.mainScene.add(powerUp)

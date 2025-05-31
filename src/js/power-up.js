@@ -26,13 +26,6 @@ export class PowerUp extends Actor {
         }
         this.on("collisionstart", (event) => this.collect(event));
     }
-    spawnPowerUp() {
-        const types = ["health", "ammo"];
-        const type = types[Math.floor(Math.random() * types.length)]; // 50/50 kans
-
-        const powerUp = new PowerUp(type);
-        this.add(powerUp);
-    }
     collect(event) {
         if (event.other.owner instanceof Player) {
             if (this.type === "health") {

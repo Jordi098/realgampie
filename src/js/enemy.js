@@ -1,9 +1,6 @@
 import { Actor, Vector, CollisionType } from "excalibur";
 
 export class Enemy extends Actor {
-    health;
-    damage;
-    
     constructor(health, damage) {
         super({ 
             collisionType: CollisionType.Active,

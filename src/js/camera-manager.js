@@ -12,7 +12,7 @@ export class CameraManager{
     initialize() {
         this.scene.camera.strategy.lockToActor(this.target);
         this.scene.camera.zoom = this.zoomLevel;
-        this.setBounds();
+        this.#setBounds();
 
     }
 
@@ -21,8 +21,7 @@ export class CameraManager{
         this.scene.camera.zoom = zoom;
     }
 
-    setBounds() {
-        // Beperk de camera tot de grootte van de wereld
+    #setBounds() {
         this.scene.camera.strategy.limitCameraBounds(
             new BoundingBox(0, 0, 1536, 1024)
         );

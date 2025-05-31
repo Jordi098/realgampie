@@ -9,9 +9,8 @@ import { GameOverScreen } from "./gameover.js"
 export class Player extends Actor {
     health
     score
-    weapon
     ammo
-    sprite
+    #sprite
     uiManager
 
     constructor(x, y) {
@@ -22,14 +21,8 @@ export class Player extends Actor {
         this.pos = new Vector(x, y)
         this.scale = new Vector(0.1, 0.1)
 
-        if (this.projectile > 2) {
-            this.weapon = "Shotgun"
-            this.sprite = Resources.PlayerShotgun.toSprite()
-        } else {
-            this.weapon = "Pistol"
-            this.sprite = Resources.PlayerPistol.toSprite()
-        }
-        this.graphics.use(this.sprite)
+        this.#sprite = Resources.PlayerPistol.toSprite()
+        this.graphics.use(this.#sprite)
     }
 
     onInitialize(engine) {
@@ -54,7 +47,6 @@ export class Player extends Actor {
             this.kill();
             const gameOver = new GameOverScreen(this.score);
 
-            // Sla engine referentie op
             const game = this.scene.engine;
             game.addScene('gameover', gameOver);
             game.goToScene('gameover');
@@ -73,7 +65,7 @@ export class Player extends Actor {
         this.uiManager.updateScore(this.score);
     }
 
-    Shoot() {
+    #Shoot() {
         if (this.ammo <= 0) {
             console.log("No ammo left!");
             return;
@@ -112,7 +104,7 @@ export class Player extends Actor {
             yspeed = 100
         }
         if (engine.input.keyboard.wasPressed(Keys.Space)) {
-            this.Shoot()
+            this.#Shoot()
         }
 
         this.vel = new Vector(xspeed, yspeed)

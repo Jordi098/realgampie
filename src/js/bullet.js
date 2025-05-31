@@ -5,6 +5,8 @@ import { Player } from "./player.js";
 import { UIManager } from "./ui.js";
 
 export class Bullet extends Actor {
+    #sprite
+    damage
     constructor(x, y, direction) {
         super({
             width: 500,
@@ -12,12 +14,12 @@ export class Bullet extends Actor {
             collisionType: CollisionType.Active
         });
 
-        this.sprite = Resources.Bullet.toSprite();
+        this.#sprite = Resources.Bullet.toSprite();
         if (direction === -1) {
-            this.sprite.flipHorizontal = true;
+            this.#sprite.flipHorizontal = true;
         }
 
-        this.graphics.use(this.sprite);
+        this.graphics.use(this.#sprite);
         this.pos = new Vector(x + (direction === 1 ? 40 : -40), y + 15);
         this.vel = new Vector(300 * direction, 0);
         this.scale = new Vector(0.07, 0.07);
@@ -32,7 +34,7 @@ export class Bullet extends Actor {
             event.other.owner.takeDamage(this.damage);
 
             if (this.scene.player) {
-                this.scene.player.addScore(10);
+                this.scene.player.addScore(1);
             }
 
             this.kill();
