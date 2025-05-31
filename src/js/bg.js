@@ -6,8 +6,8 @@ export class Bg extends Actor {
         super({
             pos: new Vector(0, 0),
             anchor: new Vector(0, 0),
-            width: 3000,
-            height: 2000
+            width: 1536,
+            height: 1024
         })
         const sprite = Resources.BG.toSprite()
         this.graphics.use(sprite)

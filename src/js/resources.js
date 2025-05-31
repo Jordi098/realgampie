@@ -7,7 +7,9 @@ const Resources = {
     Player: new ImageSource('images/player.png'),
     PlayerShotgun: new ImageSource('images/playerShotgun.png'),
     BG: new ImageSource('images/bg.png'),
-    Bullet: new ImageSource('images/bullet.png')
+    Bullet: new ImageSource('images/bullet.png'),
+    Medkit: new ImageSource('images/medkit.png'),
+    Ammo: new ImageSource('images/ammo.png')
 }
 
 

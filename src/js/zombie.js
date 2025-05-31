@@ -1,35 +1,68 @@
-import { Actor, Vector, randomInRange } from "excalibur"
+import { Actor, Vector, randomInRange, CollisionType } from "excalibur"
 import { Resources } from "./resources.js"
+import { Player } from "./player.js"
+import { Bullet } from "./bullet.js"
+import { Enemy } from "./enemy.js"
 
-export class Zombie extends Actor {
-    health
-    damage
-
-   constructor(health, damage) {
-    const sprite = Resources.Zombie.toSprite()
-    super({ width: sprite.width, height: sprite.height })
-    this.health = health
-    this.damage = damage
-    this.graphics.use(sprite)
-    this.pos = new Vector(randomInRange(0, 500), randomInRange(0, 300))
-    this.events.on("exitviewport", (e) => this.zombieLeft(e))
-}
-
-    zombieLeft(e) {
-        e.target.pos = new Vector(1300, randomInRange(0, 400))
+export class Zombie extends Enemy {
+    constructor(type = "slow"){
+        const health = type === "slow" ? 2 : 1;
+        const damage = type === "slow" ? 2 : 1;
+        super(health, damage);
+        
+        this.scale = new Vector(0.1, 0.1);
+        this.type = type;
+        this.speed = type === "slow" ? 50 : 100;
+        this.graphics.use(Resources.Zombie.toSprite());
+        this.resetPosition();
     }
 
-    takeDamage(amount) {
-        this.health -= amount
-        if (this.health <= 0) {
-            this.kill()
+    resetPosition() {
+        this.pos = new Vector(
+            randomInRange(1300, 1500),
+            randomInRange(50, 950)
+        );
+    }
+
+    onPostUpdate(engine) {
+        const player = engine.currentScene.player;
+        if (player) {
+            const direction = player.pos.sub(this.pos).normalize();
+            this.vel = direction.scale(this.speed);
         }
     }
 
-    onPreKill() {
-       
-        if (this.onDeathCallback) {
-            this.onDeathCallback(this)
+    onInitialize() {
+        this.on('collisionstart', (event) => this.handleCollision(event));
+    }
+
+    handleCollision(event) {
+        // Direct checken op Bullet type
+        if (event.other instanceof Bullet) {
+            console.log("Zombie geraakt door kogel!");
+            event.other.kill();
+            this.takeDamage(event.other.damage);
+            
+            // Geef score aan player als die bestaat
+            if (this.scene && this.scene.player) {
+                this.scene.player.addScore(10);
+            }
+        }
+        
+        // Direct checken op Player type
+        if (event.other instanceof Player) {
+            event.other.takeDamage(this.damage);
+            this.kill();
+        }
+    }
+
+    takeDamage(amount) {
+        this.health -= amount;
+        console.log(`Zombie health: ${this.health}`);
+
+        if (this.health <= 0) {
+            this.kill();
+            console.log("Zombie died!");
         }
     }
 }
