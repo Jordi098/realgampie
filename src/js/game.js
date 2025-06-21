@@ -18,7 +18,7 @@ export class Game extends Engine {
         })
 
         this.start(ResourceLoader).then(() => this.startGame())
-        this.showDebug(true)
+        // this.showDebug(true)
         this.mainScene = new Scene();
         this.add('main', this.mainScene)
 

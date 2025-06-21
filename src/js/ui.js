@@ -1,7 +1,7 @@
-import { Actor, Label, Color, Font, Vector } from "excalibur"
+import { Actor, Label, Color, Font, Vector, ScreenElement } from "excalibur"
 import { Player } from "./player.js"
 
-export class UIManager extends Actor {
+export class UIManager extends ScreenElement {
     scoreLabel
     healthLabel
     ammoLabel
